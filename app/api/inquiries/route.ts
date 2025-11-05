@@ -5,6 +5,14 @@ import { sanitizeInput, validateEmail, validatePhone } from '@/lib/utils';
 
 export async function POST(request: NextRequest) {
   try {
+    // Check if Firebase Admin is available
+    if (!adminDb) {
+      console.error('❌ Firebase Admin not initialized');
+      return NextResponse.json(
+        { error: 'Service temporarily unavailable' },
+        { status: 503 }
+      );
+    }
     const body = await request.json();
     console.log('📧 Email Inquiry API - Received body:', JSON.stringify(body, null, 2));
     const { name, email, phone, city, message, productId, productTitle, fruitName, size, quantity, products, selectedProducts } = body;

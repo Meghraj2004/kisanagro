@@ -47,6 +47,16 @@ export interface ProductSelection {
   price?: string;
 }
 
+export interface InquiryProduct {
+  productId: string;
+  productTitle: string;
+  selectedSizes: {
+    size: string;
+    quantity: number;
+    unit: string;
+  }[];
+}
+
 export interface Inquiry {
   id?: string;
   name: string;

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { FiMenu, FiX, FiPhone } from 'react-icons/fi';
 import { navigationLinks, siteConfig } from '@/lib/config';
+import logo from '../public/logo.png';
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -14,8 +15,12 @@ export default function Header() {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-gradient-to-br from-primary-600 to-primary-400 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-xl">K</span>
+            <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-gradient-to-br from-primary-600 to-primary-400">
+              <img
+                src={logo.src}
+                alt="Logo"
+                className="w-8 h-8 object-contain"
+              />
             </div>
             <span className="text-xl font-heading font-bold text-gray-900">
               {siteConfig.name}

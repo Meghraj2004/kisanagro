@@ -197,24 +197,37 @@ export default function NewProductPage() {
       
       console.log('Generated slug:', slug);
       
-      const productData = {
+      // Prepare product data without undefined values
+      const productData: any = {
         title: formData.title,
         slug,
         category: formData.category,
-        customCategory: formData.category === 'Other' ? formData.customCategory : undefined,
         description: formData.description,
         features: formData.features.filter((f) => f.trim() !== ''),
         images: formData.images,
         featured: formData.featured,
         sizeOptions: formData.sizeOptions.filter((opt) => opt.size.trim() !== '' || opt.fruits.trim() !== ''),
-        priceRange: formData.priceMin && formData.priceMax ? {
-          min: parseFloat(formData.priceMin),
-          max: parseFloat(formData.priceMax)
-        } : null,
-        minQuantity: formData.minQuantity || null,
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),
       };
+
+      // Only add customCategory if it's "Other" and has a value
+      if (formData.category === 'Other' && formData.customCategory?.trim()) {
+        productData.customCategory = formData.customCategory.trim();
+      }
+
+      // Only add priceRange if both min and max are provided
+      if (formData.priceMin && formData.priceMax) {
+        productData.priceRange = {
+          min: parseFloat(formData.priceMin),
+          max: parseFloat(formData.priceMax)
+        };
+      }
+
+      // Only add minQuantity if it has a value
+      if (formData.minQuantity?.trim()) {
+        productData.minQuantity = formData.minQuantity.trim();
+      }
       
       console.log('Product data to save:', productData);
       console.log('Database instance:', db);

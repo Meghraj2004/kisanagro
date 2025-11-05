@@ -19,6 +19,7 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
   const [formData, setFormData] = useState({
     title: '',
     category: '',
+    customCategory: '',
     description: '',
     features: [''],
     images: [] as string[],
@@ -40,6 +41,7 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
           setFormData({
             title: data.title || '',
             category: data.category || 'Fruit Foam Nets',
+            customCategory: data.customCategory || '',
             description: data.description || '',
             features: data.features || [''],
             images: data.images || [],
@@ -230,7 +232,8 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)/g, '');
 
-      await updateDoc(doc(db, 'products', params.id), {
+      // Prepare update data without undefined values
+      const updateData: any = {
         title: formData.title,
         slug,
         category: formData.category,
@@ -239,13 +242,28 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
         images: formData.images,
         featured: formData.featured,
         sizeOptions: formData.sizeOptions.filter((opt) => opt.size.trim() !== '' || opt.fruits.trim() !== ''),
-        priceRange: formData.priceMin && formData.priceMax ? {
+        updatedAt: serverTimestamp(),
+      };
+
+      // Only add customCategory if it's "Other" and has a value
+      if (formData.category === 'Other' && formData.customCategory?.trim()) {
+        updateData.customCategory = formData.customCategory.trim();
+      }
+
+      // Only add priceRange if both min and max are provided
+      if (formData.priceMin && formData.priceMax) {
+        updateData.priceRange = {
           min: parseFloat(formData.priceMin),
           max: parseFloat(formData.priceMax)
-        } : null,
-        minQuantity: formData.minQuantity || null,
-        updatedAt: serverTimestamp(),
-      });
+        };
+      }
+
+      // Only add minQuantity if it has a value
+      if (formData.minQuantity?.trim()) {
+        updateData.minQuantity = formData.minQuantity.trim();
+      }
+
+      await updateDoc(doc(db, 'products', params.id), updateData);
 
       alert('Product updated successfully!');
       router.push('/admin/products');
@@ -323,14 +341,32 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
                   required
                   className="input"
                   value={formData.category}
-                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                  onChange={(e) => setFormData({ ...formData, category: e.target.value, customCategory: '' })}
                 >
                   <option value="Fruit Foam Nets">Fruit Foam Nets</option>
                   <option value="EPE Foam">EPE Foam</option>
                   <option value="Protective Packaging">Protective Packaging</option>
                   <option value="Agriculture Supplies">Agriculture Supplies</option>
+                  <option value="Other">Other</option>
                 </select>
               </div>
+
+              {/* Custom Category Field - Only show when "Other" is selected */}
+              {formData.category === 'Other' && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Custom Category *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    className="input"
+                    placeholder="Enter custom category name"
+                    value={formData.customCategory}
+                    onChange={(e) => setFormData({ ...formData, customCategory: e.target.value })}
+                  />
+                </div>
+              )}
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
