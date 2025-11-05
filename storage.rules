@@ -1,0 +1,15 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Product images - Admin can write, everyone can read
+    match /products/{allPaths=**} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    
+    // Temporary uploads
+    match /temp/{allPaths=**} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}
