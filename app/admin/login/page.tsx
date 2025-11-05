@@ -7,6 +7,9 @@ import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '@/lib/firebase';
 import { FiMail, FiLock, FiLogIn } from 'react-icons/fi';
 
+// Force dynamic rendering to prevent static generation errors with Firebase
+export const dynamic = 'force-dynamic';
+
 export default function AdminLoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');

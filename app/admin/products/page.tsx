@@ -8,6 +8,9 @@ import { collection, getDocs, deleteDoc, doc, orderBy, query } from 'firebase/fi
 import { db, auth } from '@/lib/firebase';
 import { useAdminAuth } from '@/lib/hooks/useAdminAuth';
 import { useClientSideEmail } from '@/lib/hooks/useClientSideEmail';
+
+// Force dynamic rendering to prevent static generation errors with Firebase
+export const dynamic = 'force-dynamic';
 import { Product } from '@/types';
 import { FiPlus, FiEdit2, FiTrash2, FiLogOut, FiPackage } from 'react-icons/fi';
 

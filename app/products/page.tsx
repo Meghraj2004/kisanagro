@@ -8,6 +8,9 @@ import ProductCard from '@/components/ProductCard';
 import EnquiryModal from '@/components/EnquiryModal';
 import { generateMetadata } from '@/lib/metadata';
 
+// Force dynamic rendering to prevent static generation errors with Firebase
+export const dynamic = 'force-dynamic';
+
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);

@@ -8,6 +8,9 @@ import { db, auth } from '@/lib/firebase';
 import { useAdminAuth } from '@/lib/hooks/useAdminAuth';
 import { FiMail, FiPhone, FiMessageSquare, FiCheck, FiTrash2, FiLogOut, FiExternalLink } from 'react-icons/fi';
 
+// Force dynamic rendering to prevent static generation errors with Firebase
+export const dynamic = 'force-dynamic';
+
 interface Inquiry {
   id: string;
   name: string;

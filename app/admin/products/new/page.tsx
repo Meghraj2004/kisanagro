@@ -3,10 +3,13 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { db, auth } from '@/lib/firebase';
 import { useAdminAuth } from '@/lib/hooks/useAdminAuth';
 import { useClientSideEmail } from '@/lib/hooks/useClientSideEmail';
+
+// Force dynamic rendering to prevent static generation errors with Firebase
+export const dynamic = 'force-dynamic';
 import { FiUpload, FiX, FiSave, FiLogOut } from 'react-icons/fi';
 
 export default function NewProductPage() {

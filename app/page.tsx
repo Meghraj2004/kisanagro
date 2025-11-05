@@ -3,6 +3,9 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+
+// Force dynamic rendering to prevent static generation errors with Firebase
+export const dynamic = 'force-dynamic';
 import { FiPhone, FiMail, FiPackage, FiShield, FiTruck, FiAward } from 'react-icons/fi';
 import ProductCard from '@/components/ProductCard';
 import EnquiryModal from '@/components/EnquiryModal';

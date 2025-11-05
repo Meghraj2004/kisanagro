@@ -3,6 +3,9 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+
+// Force dynamic rendering to prevent static generation errors with Firebase
+export const dynamic = 'force-dynamic';
 import { collection, query, getDocs, orderBy, limit, where } from 'firebase/firestore';
 import { db, auth } from '@/lib/firebase';
 import { useAdminAuth } from '@/lib/hooks/useAdminAuth';
