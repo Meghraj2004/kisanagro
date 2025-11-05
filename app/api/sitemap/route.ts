@@ -1,17 +1,28 @@
 import { NextResponse } from 'next/server';
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
 import { siteConfig } from '@/lib/config';
 
 export async function GET() {
   try {
-    // Fetch all products
-    const productsRef = collection(db, 'products');
-    const snapshot = await getDocs(productsRef);
-    const products = snapshot.docs.map(doc => ({
-      ...doc.data(),
-      id: doc.id,
-    }));
+    // For now, generate sitemap without dynamic products to avoid Firebase dependency during build
+    // TODO: Add product URLs when Firebase is properly configured in production
+    let products: any[] = [];
+    
+    // Only attempt to fetch products if we have Firebase configuration
+    try {
+      if (process.env.NEXT_PUBLIC_FIREBASE_API_KEY) {
+        const { collection, getDocs } = await import('firebase/firestore');
+        const { db } = await import('@/lib/firebase');
+        const productsRef = collection(db, 'products');
+        const snapshot = await getDocs(productsRef);
+        products = snapshot.docs.map(doc => ({
+          ...doc.data(),
+          id: doc.id,
+        }));
+      }
+    } catch (error) {
+      console.warn('Firebase not available for sitemap generation:', error);
+      // Continue with empty products array
+    }
 
     // Generate sitemap XML
     const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
