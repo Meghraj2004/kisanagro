@@ -1,4 +1,15 @@
 User-agent: *
 Allow: /
 
-Sitemap: ${process.env.NEXT_PUBLIC_SITE_URL || 'https://kisanagro.com'}/sitemap.xml
+# Block admin area from search engines
+Disallow: /admin/
+Disallow: /_next/
+Disallow: /api/
+
+# Allow important pages
+Allow: /
+Allow: /products
+Allow: /about
+Allow: /contact
+
+Sitemap: https://kisanagro.com/sitemap.xml

@@ -2,9 +2,19 @@ import { FiAward, FiUsers, FiTruck, FiShield } from 'react-icons/fi';
 import { generateMetadata } from '@/lib/metadata';
 
 export const metadata = generateMetadata({
-  title: 'About Us - Leading Fruit Foam Net Manufacturer',
-  description: 'Learn about KisanAgro, a trusted manufacturer and supplier of premium agriculture fruit foam nets and protective packaging solutions.',
-  path: '/about',
+  title: 'About KisanAgro - Leading Fruit Foam Net Manufacturer in India',
+  description: 'Learn about KisanAgro, India\'s trusted manufacturer of premium fruit foam nets and agricultural packaging solutions. Our journey, mission, and commitment to quality fruit protection.',
+  keywords: [
+    'about kisanagro',
+    'fruit foam net manufacturer company',
+    'agricultural packaging company India',
+    'fruit protection solutions provider',
+    'EPE foam manufacturer about us',
+    'company profile fruit nets',
+    'manufacturing facility India',
+    'quality assurance fruit packaging'
+  ],
+  path: '/about'
 });
 
 export default function AboutPage() {
