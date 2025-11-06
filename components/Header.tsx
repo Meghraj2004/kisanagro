@@ -15,7 +15,7 @@ export default function Header() {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-gradient-to-br from-primary-600 to-primary-400">
+            <div className="w-10 h-10  flex items-center justify-center bg-gradient-to-br from-primary-600 to-primary-400">
               <img
                 src={logo.src}
                 alt="Logo"

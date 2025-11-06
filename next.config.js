@@ -1,6 +1,18 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  
+  // Performance optimizations
+  swcMinify: true,
+  compress: true,
+  poweredByHeader: false,
+  generateEtags: true,
+  
+  // Bundle analyzer for optimization
+  experimental: {
+    optimizePackageImports: ['react-icons'],
+  },
+  
   images: {
     remotePatterns: [
       {
@@ -14,7 +26,8 @@ const nextConfig = {
     dangerouslyAllowSVG: true,
     contentDispositionType: 'attachment',
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-    // Allow base64 data URIs for inline images
+    // Optimize for performance
+    minimumCacheTTL: 3600, // 1 hour
     unoptimized: false,
   },
   async rewrites() {

@@ -259,66 +259,83 @@ export default function NewProductPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Admin Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      {/* Mobile-Optimized Admin Header */}
+      <header className="bg-white shadow-sm border-b sticky top-0 z-10">
+        <div className="px-4 py-3">
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">Add New Product</h1>
-              <p className="text-sm text-gray-600 mt-1" suppressHydrationWarning>
+            <div className="flex-1 min-w-0">
+              <h1 className="text-lg sm:text-2xl font-bold text-gray-900 truncate">
+                Add New Product
+              </h1>
+              <p className="text-xs sm:text-sm text-gray-600 mt-1" suppressHydrationWarning>
                 {clientEmail || 'Admin'}
               </p>
             </div>
-            <div className="flex items-center gap-4">
-              <Link href="/admin/dashboard" className="text-gray-600 hover:text-primary-600">
-                Dashboard
-              </Link>
-              <Link href="/admin/products" className="text-gray-600 hover:text-primary-600">
-                Products
-              </Link>
+            
+            {/* Mobile Navigation Menu */}
+            <div className="flex items-center gap-2 sm:gap-4">
+              <div className="hidden sm:flex items-center gap-4">
+                <Link href="/admin/dashboard" className="text-gray-600 hover:text-primary-600 text-sm">
+                  Dashboard
+                </Link>
+                <Link href="/admin/products" className="text-gray-600 hover:text-primary-600 text-sm">
+                  Products
+                </Link>
+              </div>
+              
               <button
                 onClick={handleLogout}
-                className="btn btn-secondary flex items-center gap-2"
+                className="btn btn-secondary text-xs sm:text-sm px-2 py-1 sm:px-4 sm:py-2 flex items-center gap-1 sm:gap-2"
               >
-                <FiLogOut className="w-4 h-4" />
-                Logout
+                <FiLogOut className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span className="hidden sm:inline">Logout</span>
               </button>
             </div>
+          </div>
+          
+          {/* Mobile Navigation Links */}
+          <div className="flex sm:hidden items-center gap-4 mt-3 pt-3 border-t border-gray-200">
+            <Link href="/admin/dashboard" className="text-xs text-gray-600 hover:text-primary-600">
+              Dashboard
+            </Link>
+            <Link href="/admin/products" className="text-xs text-gray-600 hover:text-primary-600">
+              Products
+            </Link>
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <form onSubmit={handleSubmit} className="space-y-6">
+      <main className="px-4 py-4 sm:py-8 max-w-4xl mx-auto">
+        <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
           {/* Basic Info */}
-          <div className="card p-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-6">Basic Information</h2>
+          <div className="card p-4 sm:p-6">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6">Basic Information</h2>
             
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
                   Product Title *
                 </label>
                 <input
                   type="text"
                   required
-                  className="input"
+                  className="input text-sm sm:text-base"
                   placeholder="e.g., Premium EPE Foam Net"
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                 />
               </div>
 
-              <div className="flex items-center">
+              <div className="flex items-start sm:items-center gap-2">
                 <input
                   type="checkbox"
                   id="featured"
-                  className="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500"
+                  className="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 mt-0.5 sm:mt-0 flex-shrink-0"
                   checked={formData.featured}
                   onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
                 />
-                <label htmlFor="featured" className="ml-2 text-sm font-medium text-gray-700">
+                <label htmlFor="featured" className="text-xs sm:text-sm font-medium text-gray-700 leading-relaxed">
                   ⭐ Feature this product on homepage
                 </label>
               </div>
@@ -373,32 +390,32 @@ export default function NewProductPage() {
           </div>
 
           {/* Size Options & Fruit Specifications */}
-          <div className="card p-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-6">Size Options & Specifications</h2>
-            <p className="text-sm text-gray-600 mb-4">Add size options with corresponding fruits they support</p>
+          <div className="card p-4 sm:p-6">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6">Size Options & Specifications</h2>
+            <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4">Add size options with corresponding fruits they support</p>
             
-            <div className="space-y-3">
+            <div className="space-y-3 sm:space-y-4">
               {formData.sizeOptions.map((option, index) => (
-                <div key={index} className="grid grid-cols-1 md:grid-cols-4 gap-3 p-4 border border-gray-200 rounded-lg">
+                <div key={index} className="grid grid-cols-1 gap-3 p-3 sm:p-4 border border-gray-200 rounded-lg">
                   <div>
                     <label className="block text-xs font-medium text-gray-700 mb-1">
                       Size (mm)
                     </label>
                     <input
                       type="text"
-                      className="input"
+                      className="input text-sm"
                       placeholder="e.g., 40x80x180 mm"
                       value={option.size}
                       onChange={(e) => handleSizeOptionChange(index, 'size', e.target.value)}
                     />
                   </div>
-                  <div className="md:col-span-2">
+                  <div>
                     <label className="block text-xs font-medium text-gray-700 mb-1">
                       For Fruits
                     </label>
                     <input
                       type="text"
-                      className="input"
+                      className="input text-sm"
                       placeholder="e.g., For Guava (100 gm to 500 gm weight)"
                       value={option.fruits}
                       onChange={(e) => handleSizeOptionChange(index, 'fruits', e.target.value)}
@@ -413,7 +430,7 @@ export default function NewProductPage() {
                         type="number"
                         step="0.01"
                         required
-                        className="input"
+                        className="input text-sm"
                         placeholder="₹ price"
                         value={option.price}
                         onChange={(e) => handleSizeOptionChange(index, 'price', e.target.value)}
@@ -423,7 +440,7 @@ export default function NewProductPage() {
                       <button
                         type="button"
                         onClick={() => handleRemoveSizeOption(index)}
-                        className="btn btn-outline text-red-600 border-red-600 hover:bg-red-50 h-10"
+                        className="btn btn-outline text-red-600 border-red-600 hover:bg-red-50 p-2 flex-shrink-0"
                       >
                         <FiX className="w-4 h-4" />
                       </button>
@@ -529,13 +546,13 @@ export default function NewProductPage() {
           </div>
 
           {/* Images */}
-          <div className="card p-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-6">Product Images *</h2>
+          <div className="card p-4 sm:p-6">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6">Product Images *</h2>
             
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               {/* Upload Button */}
               <div>
-                <label className="btn btn-secondary cursor-pointer inline-flex items-center gap-2">
+                <label className="btn btn-secondary cursor-pointer w-full sm:w-auto inline-flex items-center justify-center gap-2 text-sm">
                   <FiUpload className="w-4 h-4" />
                   {uploading ? 'Uploading...' : 'Upload Images'}
                   <input
@@ -547,30 +564,30 @@ export default function NewProductPage() {
                     disabled={uploading}
                   />
                 </label>
-                <p className="text-sm text-gray-500 mt-2">
+                <p className="text-xs sm:text-sm text-gray-500 mt-2">
                   Upload up to 10MB per image. Images will be automatically compressed and resized for optimal storage.
                 </p>
               </div>
 
-              {/* Image Preview */}
+              {/* Image Preview - Mobile Optimized */}
               {formData.images.length > 0 && (
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
                   {formData.images.map((url, index) => (
                     <div key={index} className="relative group">
                       <img
                         src={url}
                         alt={`Product ${index + 1}`}
-                        className="w-full h-32 object-cover rounded-lg"
+                        className="w-full h-24 sm:h-32 object-cover rounded-lg"
                       />
                       <button
                         type="button"
                         onClick={() => handleRemoveImage(index)}
-                        className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                        className="absolute top-1 right-1 sm:top-2 sm:right-2 bg-red-500 text-white p-1 rounded-full opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity"
                       >
-                        <FiX className="w-4 h-4" />
+                        <FiX className="w-3 h-3 sm:w-4 sm:h-4" />
                       </button>
                       {index === 0 && (
-                        <span className="absolute bottom-2 left-2 bg-primary-600 text-white text-xs px-2 py-1 rounded">
+                        <span className="absolute bottom-1 left-1 sm:bottom-2 sm:left-2 bg-primary-600 text-white text-xs px-1.5 py-0.5 sm:px-2 sm:py-1 rounded">
                           Main
                         </span>
                       )}
@@ -581,15 +598,15 @@ export default function NewProductPage() {
             </div>
           </div>
 
-          {/* Actions */}
-          <div className="flex items-center justify-between">
-            <Link href="/admin/products" className="text-gray-600 hover:underline">
+          {/* Actions - Mobile Optimized */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-0">
+            <Link href="/admin/products" className="text-center sm:text-left text-gray-600 hover:underline text-sm order-2 sm:order-1">
               ← Back to Products
             </Link>
             <button
               type="submit"
               disabled={saving || uploading}
-              className="btn btn-primary flex items-center gap-2"
+              className="btn btn-primary flex items-center justify-center gap-2 text-sm sm:text-base py-3 sm:py-2 order-1 sm:order-2"
             >
               <FiSave className="w-4 h-4" />
               {saving ? 'Saving...' : 'Save Product'}

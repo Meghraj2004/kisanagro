@@ -5,13 +5,19 @@ import { sanitizeInput, validateEmail, validatePhone } from '@/lib/utils';
 
 export async function POST(request: NextRequest) {
   try {
-    // Check if Firebase Admin is available
-    if (!adminDb) {
-      console.error('❌ Firebase Admin not initialized');
+    // Check if we're in development and Firebase Admin is not available
+    const isDevelopment = process.env.NODE_ENV === 'development';
+    
+    if (!adminDb && !isDevelopment) {
+      console.error('❌ Firebase Admin not initialized in production');
       return NextResponse.json(
         { error: 'Service temporarily unavailable' },
         { status: 503 }
       );
+    }
+
+    if (!adminDb && isDevelopment) {
+      console.warn('⚠️ Firebase Admin not initialized - running in development mode without database');
     }
     const body = await request.json();
     console.log('📧 Email Inquiry API - Received body:', JSON.stringify(body, null, 2));
@@ -78,9 +84,17 @@ export async function POST(request: NextRequest) {
     };
 
     // Save to Firestore using Admin SDK (bypasses security rules)
-    console.log('💾 Attempting to save inquiry to Firestore using Admin SDK...');
-    const docRef = await adminDb.collection('inquiries').add(inquiry);
-    console.log('✅ Inquiry saved to Firestore:', docRef.id);
+    let docRef: any = null;
+    
+    if (adminDb) {
+      console.log('💾 Attempting to save inquiry to Firestore using Admin SDK...');
+      docRef = await adminDb.collection('inquiries').add(inquiry);
+      console.log('✅ Inquiry saved to Firestore:', docRef.id);
+    } else {
+      console.log('⚠️ Development mode: Skipping Firestore save (Firebase Admin not configured)');
+      // Create a fake doc reference for development
+      docRef = { id: 'dev_' + Date.now() };
+    }
 
     // Send email notification
     const inquiryForEmail: any = {

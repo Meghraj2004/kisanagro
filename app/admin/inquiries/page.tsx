@@ -126,78 +126,98 @@ export default function AdminInquiriesPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Admin Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      {/* Mobile-Optimized Admin Header */}
+      <header className="bg-white shadow-sm border-b sticky top-0 z-10">
+        <div className="px-4 py-3">
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">Inquiries Management</h1>
-              <p className="text-sm text-gray-600 mt-1 suppress-hydration-warning">
+            <div className="flex-1 min-w-0">
+              <h1 className="text-lg sm:text-2xl font-bold text-gray-900 truncate">
+                Inquiries Management
+              </h1>
+              <p className="text-xs sm:text-sm text-gray-600 mt-1 suppress-hydration-warning">
                 {user?.email || 'Admin'}
               </p>
             </div>
-            <div className="flex items-center gap-4">
-              <Link href="/admin/dashboard" className="text-gray-600 hover:text-primary-600">
-                Dashboard
-              </Link>
-              <Link href="/admin/products" className="text-gray-600 hover:text-primary-600">
-                Products
-              </Link>
-              <Link href="/" className="text-gray-600 hover:text-primary-600">
-                View Website
-              </Link>
+            
+            {/* Mobile Navigation Menu */}
+            <div className="flex items-center gap-2 sm:gap-4">
+              <div className="hidden sm:flex items-center gap-4">
+                <Link href="/admin/dashboard" className="text-gray-600 hover:text-primary-600 text-sm">
+                  Dashboard
+                </Link>
+                <Link href="/admin/products" className="text-gray-600 hover:text-primary-600 text-sm">
+                  Products
+                </Link>
+                <Link href="/" className="text-gray-600 hover:text-primary-600 text-sm">
+                  View Website
+                </Link>
+              </div>
+              
               <button
                 onClick={handleLogout}
-                className="btn btn-secondary flex items-center gap-2"
+                className="btn btn-secondary text-xs sm:text-sm px-2 py-1 sm:px-4 sm:py-2 flex items-center gap-1 sm:gap-2"
               >
-                <FiLogOut className="w-4 h-4" />
-                Logout
+                <FiLogOut className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span className="hidden sm:inline">Logout</span>
               </button>
             </div>
+          </div>
+          
+          {/* Mobile Navigation Links */}
+          <div className="flex sm:hidden items-center gap-4 mt-3 pt-3 border-t border-gray-200">
+            <Link href="/admin/dashboard" className="text-xs text-gray-600 hover:text-primary-600">
+              Dashboard
+            </Link>
+            <Link href="/admin/products" className="text-xs text-gray-600 hover:text-primary-600">
+              Products
+            </Link>
+            <Link href="/" className="text-xs text-gray-600 hover:text-primary-600">
+              View Website
+            </Link>
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Filter Tabs */}
-        <div className="flex items-center gap-4 mb-6">
+      <main className="px-4 py-4 sm:py-8 max-w-7xl mx-auto">
+        {/* Mobile-Responsive Filter Tabs */}
+        <div className="flex flex-wrap gap-2 sm:gap-4 mb-4 sm:mb-6">
           <button
             onClick={() => setFilter('all')}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+            className={`flex-1 sm:flex-none px-3 py-2 sm:px-4 rounded-lg font-medium text-xs sm:text-sm transition-colors ${
               filter === 'all'
                 ? 'bg-primary-600 text-white'
-                : 'bg-white text-gray-700 hover:bg-gray-50'
+                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
             }`}
           >
             All ({inquiries.length})
           </button>
           <button
             onClick={() => setFilter('new')}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+            className={`flex-1 sm:flex-none px-3 py-2 sm:px-4 rounded-lg font-medium text-xs sm:text-sm transition-colors ${
               filter === 'new'
                 ? 'bg-primary-600 text-white'
-                : 'bg-white text-gray-700 hover:bg-gray-50'
+                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
             }`}
           >
             New ({inquiries.filter((i) => i.status === 'new').length})
           </button>
           <button
             onClick={() => setFilter('contacted')}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+            className={`flex-1 sm:flex-none px-3 py-2 sm:px-4 rounded-lg font-medium text-xs sm:text-sm transition-colors ${
               filter === 'contacted'
                 ? 'bg-primary-600 text-white'
-                : 'bg-white text-gray-700 hover:bg-gray-50'
+                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
             }`}
           >
             Contacted ({inquiries.filter((i) => i.status === 'contacted').length})
           </button>
           <button
             onClick={() => setFilter('resolved')}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+            className={`flex-1 sm:flex-none px-3 py-2 sm:px-4 rounded-lg font-medium text-xs sm:text-sm transition-colors ${
               filter === 'resolved'
                 ? 'bg-primary-600 text-white'
-                : 'bg-white text-gray-700 hover:bg-gray-50'
+                : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
             }`}
           >
             Resolved ({inquiries.filter((i) => i.status === 'resolved').length})
@@ -223,15 +243,18 @@ export default function AdminInquiriesPage() {
             </p>
           </div>
         ) : (
-          <div className="grid gap-6">
+          <div className="grid gap-4 sm:gap-6">
             {filteredInquiries.map((inquiry) => (
-              <div key={inquiry.id} className="card p-6">
-                <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <div className="flex items-center gap-3 mb-2">
-                      <h3 className="text-lg font-bold text-gray-900">{inquiry.name}</h3>
+              <div key={inquiry.id} className="card p-4 sm:p-6">
+                {/* Header Section - Mobile Optimized */}
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-3 sm:mb-4">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
+                      <h3 className="text-base sm:text-lg font-bold text-gray-900 truncate">
+                        {inquiry.name}
+                      </h3>
                       <span
-                        className={`px-3 py-1 rounded-full text-xs font-medium border ${getStatusColor(
+                        className={`self-start px-2 py-1 sm:px-3 rounded-full text-xs font-medium border ${getStatusColor(
                           inquiry.status
                         )}`}
                       >
@@ -239,57 +262,65 @@ export default function AdminInquiriesPage() {
                       </span>
                     </div>
                     {inquiry.productName && (
-                      <p className="text-sm text-gray-600 mb-2">
+                      <p className="text-xs sm:text-sm text-gray-600 mb-2">
                         Product: <span className="font-medium">{inquiry.productName}</span>
                       </p>
                     )}
-                    <p className="text-sm text-gray-500">
+                    <p className="text-xs sm:text-sm text-gray-500">
                       {inquiry.createdAt.toLocaleDateString()} at{' '}
                       {inquiry.createdAt.toLocaleTimeString()}
                     </p>
                   </div>
                 </div>
 
-                {/* Contact Info */}
-                <div className="grid md:grid-cols-2 gap-3 mb-4">
-                  <div className="flex items-center gap-2 text-gray-700">
-                    <FiMail className="w-4 h-4 text-primary-600" />
-                    <a href={`mailto:${inquiry.email}`} className="hover:underline">
+                {/* Contact Info - Mobile Stacked */}
+                <div className="flex flex-col sm:grid sm:grid-cols-2 gap-2 sm:gap-3 mb-3 sm:mb-4">
+                  <div className="flex items-center gap-2 text-gray-700 min-w-0">
+                    <FiMail className="w-3 h-3 sm:w-4 sm:h-4 text-primary-600 flex-shrink-0" />
+                    <a 
+                      href={`mailto:${inquiry.email}`} 
+                      className="hover:underline text-xs sm:text-sm truncate"
+                    >
                       {inquiry.email}
                     </a>
                   </div>
                   <div className="flex items-center gap-2 text-gray-700">
-                    <FiPhone className="w-4 h-4 text-primary-600" />
-                    <a href={`tel:${inquiry.phone}`} className="hover:underline">
-                      {inquiry.phone}
-                    </a>
-                    <a
-                      href={`https://wa.me/${inquiry.phone.replace(/\D/g, '')}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-green-600 hover:underline ml-2 flex items-center gap-1"
-                    >
-                      <FiExternalLink className="w-3 h-3" />
-                      WhatsApp
-                    </a>
+                    <FiPhone className="w-3 h-3 sm:w-4 sm:h-4 text-primary-600 flex-shrink-0" />
+                    <div className="flex items-center gap-2 min-w-0">
+                      <a 
+                        href={`tel:${inquiry.phone}`} 
+                        className="hover:underline text-xs sm:text-sm truncate"
+                      >
+                        {inquiry.phone}
+                      </a>
+                      <a
+                        href={`https://wa.me/${inquiry.phone.replace(/\D/g, '')}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-green-600 hover:underline flex items-center gap-1 text-xs sm:text-sm flex-shrink-0"
+                      >
+                        <FiExternalLink className="w-3 h-3" />
+                        WhatsApp
+                      </a>
+                    </div>
                   </div>
                 </div>
 
-                {/* Message */}
-                <div className="bg-gray-50 rounded-lg p-4 mb-4">
-                  <p className="text-sm font-medium text-gray-700 mb-2">Message:</p>
-                  <p className="text-gray-900">{inquiry.message}</p>
+                {/* Message - Mobile Optimized */}
+                <div className="bg-gray-50 rounded-lg p-3 sm:p-4 mb-3 sm:mb-4">
+                  <p className="text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">Message:</p>
+                  <p className="text-xs sm:text-sm text-gray-900 leading-relaxed">{inquiry.message}</p>
                 </div>
 
-                {/* Actions */}
-                <div className="flex items-center gap-3">
+                {/* Actions - Mobile Stacked */}
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                   {inquiry.status === 'new' && (
                     <button
                       onClick={() => handleStatusUpdate(inquiry.id, 'contacted')}
                       disabled={updating === inquiry.id}
-                      className="btn btn-primary text-sm flex items-center gap-2"
+                      className="btn btn-primary text-xs sm:text-sm flex items-center justify-center gap-1 sm:gap-2 py-2 sm:py-2"
                     >
-                      <FiCheck className="w-4 h-4" />
+                      <FiCheck className="w-3 h-3 sm:w-4 sm:h-4" />
                       {updating === inquiry.id ? 'Updating...' : 'Mark as Contacted'}
                     </button>
                   )}
@@ -297,17 +328,17 @@ export default function AdminInquiriesPage() {
                     <button
                       onClick={() => handleStatusUpdate(inquiry.id, 'resolved')}
                       disabled={updating === inquiry.id}
-                      className="btn btn-primary text-sm flex items-center gap-2"
+                      className="btn btn-primary text-xs sm:text-sm flex items-center justify-center gap-1 sm:gap-2 py-2 sm:py-2"
                     >
-                      <FiCheck className="w-4 h-4" />
+                      <FiCheck className="w-3 h-3 sm:w-4 sm:h-4" />
                       {updating === inquiry.id ? 'Updating...' : 'Mark as Resolved'}
                     </button>
                   )}
                   <button
                     onClick={() => handleDelete(inquiry.id)}
-                    className="btn btn-outline text-sm flex items-center gap-2 text-red-600 border-red-600 hover:bg-red-50"
+                    className="btn btn-outline text-xs sm:text-sm flex items-center justify-center gap-1 sm:gap-2 text-red-600 border-red-600 hover:bg-red-50 py-2 sm:py-2"
                   >
-                    <FiTrash2 className="w-4 h-4" />
+                    <FiTrash2 className="w-3 h-3 sm:w-4 sm:h-4" />
                     Delete
                   </button>
                 </div>

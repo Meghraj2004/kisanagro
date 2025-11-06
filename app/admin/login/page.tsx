@@ -204,23 +204,7 @@ export default function AdminLoginPage() {
           </div>
 
           {/* Helper for creating admin document */}
-          <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <p className="text-sm text-blue-800 mb-2">
-              <strong>First time setup?</strong>
-            </p>
-            <p className="text-xs text-blue-700 mb-3">
-              If you have created a user in Firebase Authentication but can't login, 
-              click below to create the admin document in Firestore:
-            </p>
-            <button
-              type="button"
-              onClick={handleCreateAdminDoc}
-              disabled={creatingDoc || !email}
-              className="text-xs btn btn-secondary w-full"
-            >
-              {creatingDoc ? 'Creating Admin Document...' : 'Create Admin Document'}
-            </button>
-          </div>
+        
         </div>
 
         {/* Security Notice */}

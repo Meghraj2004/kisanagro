@@ -8,9 +8,13 @@ import Image from 'next/image';
 export const dynamic = 'force-dynamic';
 import { FiPhone, FiMail, FiPackage, FiShield, FiTruck, FiAward } from 'react-icons/fi';
 import ProductCard from '@/components/ProductCard';
-import EnquiryModal from '@/components/EnquiryModal';
-import FeaturedProducts from '@/components/FeaturedProducts';
-import InquiryCartFloating from '@/components/InquiryCartFloating';
+import { lazy, Suspense } from 'react';
+import LoadingSpinner from '@/components/LoadingSpinner';
+
+// Lazy load components for better performance
+const EnquiryModal = lazy(() => import('@/components/EnquiryModal'));
+const FeaturedProducts = lazy(() => import('@/components/FeaturedProducts'));
+const InquiryCartFloating = lazy(() => import('@/components/InquiryCartFloating'));
 import { Product } from '@/types';
 import { siteConfig } from '@/lib/config';
 
@@ -104,7 +108,32 @@ export default function HomePage() {
       </section>
 
       {/* Featured Products Section */}
-      <FeaturedProducts onEnquiry={handleEnquiry} />
+      <Suspense fallback={
+        <div className="section-padding bg-gray-50">
+          <div className="container">
+            <div className="text-center mb-12">
+              <div className="h-8 bg-gray-300 rounded w-64 mx-auto mb-4 animate-pulse"></div>
+              <div className="h-6 bg-gray-300 rounded w-96 mx-auto animate-pulse"></div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {Array.from({ length: 6 }).map((_, index) => (
+                <div key={index} className="animate-pulse">
+                  <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
+                    <div className="bg-gray-300 h-48 rounded-lg mb-4"></div>
+                    <div className="space-y-3">
+                      <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+                      <div className="h-4 bg-gray-300 rounded w-1/2"></div>
+                      <div className="h-20 bg-gray-300 rounded"></div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      }>
+        <FeaturedProducts onEnquiry={handleEnquiry} />
+      </Suspense>
 
       {/* CTA Section */}
       <section className="section-padding bg-gradient-to-r from-primary-600 to-primary-500 text-white">
@@ -129,11 +158,13 @@ export default function HomePage() {
         </div>
       </section>
 
-      <EnquiryModal
-        isOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
-        product={selectedProduct}
-      />
+      <Suspense fallback={<LoadingSpinner className="mx-auto" />}>
+        <EnquiryModal
+          isOpen={modalOpen}
+          onClose={() => setModalOpen(false)}
+          product={selectedProduct}
+        />
+      </Suspense>
     </>
   );
 }

@@ -36,11 +36,16 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     const fetchStats = async () => {
+      setLoadingStats(true);
       try {
-        // Get products count and recent products
-        const productsQuery = query(collection(db, 'products'), orderBy('createdAt', 'desc'), limit(5));
-        const productsSnapshot = await getDocs(productsQuery);
-        const productsCount = productsSnapshot.size;
+        // Optimize: Run queries in parallel for better performance
+        const [productsSnapshot, inquiriesSnapshot, allProductsSnapshot, allInquiriesSnapshot] = await Promise.all([
+          getDocs(query(collection(db, 'products'), orderBy('createdAt', 'desc'), limit(5))),
+          getDocs(query(collection(db, 'inquiries'), orderBy('createdAt', 'desc'), limit(5))),
+          getDocs(collection(db, 'products')), // Get ALL products for correct count
+          getDocs(collection(db, 'inquiries'))
+        ]);
+
         const recentProds = productsSnapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data(),
@@ -48,30 +53,20 @@ export default function AdminDashboard() {
           updatedAt: doc.data().updatedAt?.toDate() || new Date(),
         })) as Product[];
 
-        // Get all products count
-        const allProductsSnapshot = await getDocs(collection(db, 'products'));
-        
-        // Get inquiries count and recent inquiries
-        const inquiriesQuery = query(collection(db, 'inquiries'), orderBy('createdAt', 'desc'), limit(5));
-        const inquiriesSnapshot = await getDocs(inquiriesQuery);
         const recentInqs = inquiriesSnapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data(),
           createdAt: doc.data().createdAt?.toDate() || new Date(),
         })) as Inquiry[];
 
-        // Get all inquiries count
-        const allInquiriesSnapshot = await getDocs(collection(db, 'inquiries'));
-        const inquiriesCount = allInquiriesSnapshot.size;
-
-        // Get pending inquiries count
+        // Get pending inquiries count more efficiently
         const pendingCount = allInquiriesSnapshot.docs.filter(
           (doc) => doc.data().status === 'new'
         ).length;
 
         setStats({
           products: allProductsSnapshot.size,
-          inquiries: inquiriesCount,
+          inquiries: allInquiriesSnapshot.size,
           pendingInquiries: pendingCount,
         });
         

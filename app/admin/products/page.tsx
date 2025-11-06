@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { collection, getDocs, deleteDoc, doc, orderBy, query } from 'firebase/firestore';
+import { collection, getDocs, deleteDoc, doc, orderBy, query, limit, startAfter, DocumentSnapshot } from 'firebase/firestore';
 import { db, auth } from '@/lib/firebase';
 import { useAdminAuth } from '@/lib/hooks/useAdminAuth';
 import { useClientSideEmail } from '@/lib/hooks/useClientSideEmail';
@@ -20,7 +20,12 @@ export default function AdminProductsPage() {
   const router = useRouter();
   const [products, setProducts] = useState<Product[]>([]);
   const [loadingProducts, setLoadingProducts] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [deleting, setDeleting] = useState<string | null>(null);
+  const [lastDoc, setLastDoc] = useState<DocumentSnapshot | null>(null);
+  const [hasMore, setHasMore] = useState(true);
+  
+  const PRODUCTS_PER_PAGE = 20;
 
   useEffect(() => {
     if (!loading && !isAdmin) {
@@ -112,46 +117,69 @@ export default function AdminProductsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Admin Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      {/* Mobile-Optimized Admin Header */}
+      <header className="bg-white shadow-sm border-b sticky top-0 z-10">
+        <div className="px-4 py-3">
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">Products Management</h1>
-              <p className="text-sm text-gray-600 mt-1" suppressHydrationWarning>
+            <div className="flex-1 min-w-0">
+              <h1 className="text-lg sm:text-2xl font-bold text-gray-900 truncate">
+                Products Management
+              </h1>
+              <p className="text-xs sm:text-sm text-gray-600 mt-1" suppressHydrationWarning>
                 {clientEmail || 'Admin'}
               </p>
             </div>
-            <div className="flex items-center gap-4">
-              <Link href="/admin/dashboard" className="text-gray-600 hover:text-primary-600">
-                Dashboard
-              </Link>
-              <Link href="/admin/inquiries" className="text-gray-600 hover:text-primary-600">
-                Inquiries
-              </Link>
-              <Link href="/" className="text-gray-600 hover:text-primary-600">
-                View Website
-              </Link>
+            
+            {/* Mobile Navigation Menu */}
+            <div className="flex items-center gap-2 sm:gap-4">
+              <div className="hidden sm:flex items-center gap-4">
+                <Link href="/admin/dashboard" className="text-gray-600 hover:text-primary-600 text-sm">
+                  Dashboard
+                </Link>
+                <Link href="/admin/inquiries" className="text-gray-600 hover:text-primary-600 text-sm">
+                  Inquiries
+                </Link>
+                <Link href="/" className="text-gray-600 hover:text-primary-600 text-sm">
+                  View Website
+                </Link>
+              </div>
+              
               <button
                 onClick={handleLogout}
-                className="btn btn-secondary flex items-center gap-2"
+                className="btn btn-secondary text-xs sm:text-sm px-2 py-1 sm:px-4 sm:py-2 flex items-center gap-1 sm:gap-2"
               >
-                <FiLogOut className="w-4 h-4" />
-                Logout
+                <FiLogOut className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span className="hidden sm:inline">Logout</span>
               </button>
             </div>
+          </div>
+          
+          {/* Mobile Navigation Links */}
+          <div className="flex sm:hidden items-center gap-4 mt-3 pt-3 border-t border-gray-200">
+            <Link href="/admin/dashboard" className="text-xs text-gray-600 hover:text-primary-600">
+              Dashboard
+            </Link>
+            <Link href="/admin/inquiries" className="text-xs text-gray-600 hover:text-primary-600">
+              Inquiries
+            </Link>
+            <Link href="/" className="text-xs text-gray-600 hover:text-primary-600">
+              View Website
+            </Link>
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Action Bar */}
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold text-gray-900">
+      <main className="px-4 py-4 sm:py-8 max-w-7xl mx-auto">
+        {/* Mobile-Optimized Action Bar */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+          <h2 className="text-lg sm:text-xl font-bold text-gray-900">
             All Products ({products.length})
           </h2>
-          <Link href="/admin/products/new" className="btn btn-primary flex items-center gap-2">
+          <Link 
+            href="/admin/products/new" 
+            className="btn btn-primary w-full sm:w-auto flex items-center justify-center gap-2 text-sm sm:text-base"
+          >
             <FiPlus className="w-4 h-4" />
             Add New Product
           </Link>
@@ -176,12 +204,12 @@ export default function AdminProductsPage() {
             </Link>
           </div>
         ) : (
-          <div className="grid gap-6">
+          <div className="space-y-4">
             {products.map((product) => (
-              <div key={product.id} className="card p-6">
-                <div className="flex items-start gap-6">
+              <div key={product.id} className="card p-4 sm:p-6 hover:shadow-md transition-shadow">
+                <div className="flex flex-col sm:flex-row gap-4">
                   {/* Product Image */}
-                  <div className="w-24 h-24 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                  <div className="w-full sm:w-24 h-48 sm:h-24 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
                     {product.images && product.images[0] ? (
                       product.images[0].startsWith('data:') ? (
                         // Base64 image
@@ -208,53 +236,72 @@ export default function AdminProductsPage() {
                   </div>
 
                   {/* Product Info */}
-                  <div className="flex-1">
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <h3 className="text-lg font-bold text-gray-900 mb-1">
-                          {product.title}
-                        </h3>
-                        <p className="text-sm text-gray-600 mb-2">
-                          Category: {product.category}
-                        </p>
-                        <p className="text-gray-700 line-clamp-2">{product.description}</p>
+                  <div className="flex-1 min-w-0">
+                    <div className="mb-3">
+                      <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-1 truncate">
+                        {product.title}
+                      </h3>
+                      <div className="flex flex-wrap items-center gap-2 mb-2">
+                        <span className="inline-flex items-center px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                          {product.category}
+                        </span>
+                        {product.featured && (
+                          <span className="inline-flex items-center px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full">
+                            ⭐ Featured
+                          </span>
+                        )}
+                        {product.priceRange && (
+                          <span className="inline-flex items-center px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
+                            ₹{product.priceRange.min} - ₹{product.priceRange.max}
+                          </span>
+                        )}
                       </div>
+                      <p className="text-sm text-gray-700 line-clamp-2 sm:line-clamp-1">
+                        {product.description}
+                      </p>
                     </div>
 
                     {/* Product Features */}
                     {product.features && product.features.length > 0 && (
-                      <div className="mt-3 flex flex-wrap gap-2">
-                        {product.features.slice(0, 3).map((feature, idx) => (
+                      <div className="mb-4 flex flex-wrap gap-1">
+                        {product.features.slice(0, 2).map((feature, idx) => (
                           <span
                             key={idx}
-                            className="px-2 py-1 bg-primary-50 text-primary-700 text-xs rounded-full"
+                            className="px-2 py-1 bg-primary-50 text-primary-700 text-xs rounded-md"
                           >
                             {feature}
                           </span>
                         ))}
+                        {product.features.length > 2 && (
+                          <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-md">
+                            +{product.features.length - 2} more
+                          </span>
+                        )}
                       </div>
                     )}
 
                     {/* Actions */}
-                    <div className="mt-4 flex items-center gap-3">
-                      <Link
-                        href={`/admin/products/edit/${product.id}`}
-                        className="btn btn-secondary text-sm flex items-center gap-2"
-                      >
-                        <FiEdit2 className="w-4 h-4" />
-                        Edit
-                      </Link>
-                      <button
-                        onClick={() => handleDelete(product.id)}
-                        disabled={deleting === product.id}
-                        className="btn btn-outline text-sm flex items-center gap-2 text-red-600 border-red-600 hover:bg-red-50"
-                      >
-                        <FiTrash2 className="w-4 h-4" />
-                        {deleting === product.id ? 'Deleting...' : 'Delete'}
-                      </button>
+                    <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+                      <div className="flex gap-2 flex-1">
+                        <Link
+                          href={`/admin/products/edit/${product.id}`}
+                          className="btn btn-secondary flex-1 sm:flex-none text-xs sm:text-sm flex items-center justify-center gap-1 sm:gap-2 py-2"
+                        >
+                          <FiEdit2 className="w-3 h-3 sm:w-4 sm:h-4" />
+                          Edit
+                        </Link>
+                        <button
+                          onClick={() => handleDelete(product.id)}
+                          disabled={deleting === product.id}
+                          className="btn btn-outline flex-1 sm:flex-none text-xs sm:text-sm flex items-center justify-center gap-1 sm:gap-2 text-red-600 border-red-600 hover:bg-red-50 py-2"
+                        >
+                          <FiTrash2 className="w-3 h-3 sm:w-4 sm:h-4" />
+                          {deleting === product.id ? 'Deleting...' : 'Delete'}
+                        </button>
+                      </div>
                       <Link
                         href={`/products/${product.slug}`}
-                        className="text-sm text-primary-600 hover:underline"
+                        className="text-xs sm:text-sm text-primary-600 hover:underline text-center sm:text-left py-2 sm:py-0 sm:self-center"
                       >
                         View on Website →
                       </Link>

@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { collection, query, where, getDocs, orderBy, limit } from 'firebase/firestore';
+import { useState, useEffect, useMemo, memo, useCallback } from 'react';
+import { collection, query, getDocs, orderBy, limit } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { Product } from '@/types';
 import ProductCard from './ProductCard';
@@ -11,77 +11,55 @@ interface FeaturedProductsProps {
   onAddToCart?: (product: Product) => void;
 }
 
-export default function FeaturedProducts({ onEnquiry, onAddToCart }: FeaturedProductsProps) {
+function FeaturedProductsComponent({ onEnquiry, onAddToCart }: FeaturedProductsProps) {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchFeaturedProducts = async () => {
-      try {
-        console.log('🔍 Fetching all products...');
-        
-        // Fetch all products and filter client-side to avoid index issues
-        const allProductsQuery = query(
-          collection(db, 'products'),
-          limit(20) // Get more to ensure we have enough featured ones
-        );
-        
-        const allSnapshot = await getDocs(allProductsQuery);
-        console.log(`📊 Found ${allSnapshot.docs.length} total products`);
-        
-        if (allSnapshot.docs.length === 0) {
-          console.log('⚠️ No products in database at all!');
-          setProducts([]);
-          return;
-        }
-
-        const allProducts = allSnapshot.docs.map(doc => {
-          const data = doc.data();
-          console.log(`Product: ${data.title}, featured: ${data.featured}, id: ${doc.id}`);
-          return {
-            id: doc.id,
-            ...data,
-            createdAt: data.createdAt?.toDate() || new Date(),
-            updatedAt: data.updatedAt?.toDate() || new Date(),
-          };
-        }) as Product[];
-        
-        // Filter featured products client-side
-        const featuredProducts = allProducts.filter(product => product.featured === true);
-        console.log(`✨ Found ${featuredProducts.length} featured products out of ${allProducts.length} total`);
-        
-        let finalProducts: Product[] = [];
-        
-        if (featuredProducts.length > 0) {
-          // Sort by creation date and take first 6
-          finalProducts = featuredProducts
-            .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
-            .slice(0, 6);
-          console.log(`🎯 Showing ${finalProducts.length} featured products`);
-        } else {
-          console.log('⚠️ No featured products found, showing latest products...');
-          // Show latest products if no featured ones
-          finalProducts = allProducts
-            .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
-            .slice(0, 6);
-          console.log(`🎯 Showing ${finalProducts.length} latest products`);
-        }
-        
-        setProducts(finalProducts);
-        
-        console.log(`� Displaying ${products.length} products`);
-      } catch (error: any) {
-        console.error('❌ Error fetching products:', error);
-        setError(error.message || 'Failed to load products');
+  const fetchFeaturedProducts = useCallback(async () => {
+    try {
+      setLoading(true);
+      
+      // Optimize: Use indexed query and limit results immediately
+      const featuredQuery = query(
+        collection(db, 'products'),
+        orderBy('createdAt', 'desc'),
+        limit(10) // Get a few more to filter featured ones
+      );
+      
+      const snapshot = await getDocs(featuredQuery);
+      
+      if (snapshot.docs.length === 0) {
         setProducts([]);
-      } finally {
-        setLoading(false);
+        return;
       }
-    };
 
-    fetchFeaturedProducts();
+      const allProducts = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+        createdAt: doc.data().createdAt?.toDate() || new Date(),
+        updatedAt: doc.data().updatedAt?.toDate() || new Date(),
+      })) as Product[];
+      
+      // Filter featured products or show latest if none
+      const featuredProducts = allProducts.filter(product => product.featured === true);
+      const finalProducts = featuredProducts.length > 0 
+        ? featuredProducts.slice(0, 6)
+        : allProducts.slice(0, 6);
+      
+      setProducts(finalProducts);
+    } catch (error: any) {
+      console.error('❌ Error fetching products:', error);
+      setError(error.message || 'Failed to load products');
+      setProducts([]);
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchFeaturedProducts();
+  }, [fetchFeaturedProducts]);
 
 
 
@@ -178,3 +156,8 @@ export default function FeaturedProducts({ onEnquiry, onAddToCart }: FeaturedPro
     </section>
   );
 }
+
+// Memoize the component for better performance
+const FeaturedProducts = memo(FeaturedProductsComponent);
+
+export default FeaturedProducts;
