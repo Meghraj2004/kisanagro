@@ -163,7 +163,7 @@ ${formData.additionalNotes ? `📝 *Additional Notes:*\n${formData.additionalNot
 
 ✅ *Please contact me with pricing and availability.*`;
 
-    const adminPhone = process.env.NEXT_PUBLIC_ADMIN_PHONE || '9421612110';
+    const adminPhone = process.env.NEXT_PUBLIC_ADMIN_PHONE || '7249261176';
     const whatsappUrl = `https://wa.me/${adminPhone}?text=${encodeURIComponent(message.trim())}`;
     
     window.open(whatsappUrl, '_blank');

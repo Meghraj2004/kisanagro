@@ -96,9 +96,21 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-gray-900 mb-1">Phone</h3>
-                  <a href={`tel:${siteConfig.phone}`} className="text-primary-600 hover:underline">
-                    {siteConfig.phone}
-                  </a>
+                  <ul className="space-y-1">
+                  <li>
+                    <a href="tel:7249261176" className="text-primary-600 hover:underline font-semibold">
+                    Jinendra Ajmera: 7249261176
+                    <span className="ml-2 text-xs text-primary-700 bg-primary-50 px-2 py-0.5 rounded">
+                      Primary
+                    </span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="tel:1234567890" className="text-primary-600 hover:underline">
+                    Sales Manager: 1234567890
+                    </a>
+                  </li>
+                  </ul>
                 </div>
               </div>
 

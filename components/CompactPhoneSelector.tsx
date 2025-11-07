@@ -16,7 +16,7 @@ export default function CompactPhoneSelector({
   const [isOpen, setIsOpen] = useState(false);
 
   const phoneNumbers = siteConfig.phoneNumbers || [
-    { name: 'Megharaj Dandgavhal', number: '9421612110', isPrimary: true }
+    { name: 'Jinedra Ajmera', number: '7249261176', isPrimary: true }
   ];
 
   const handleCall = (phoneNumber: string) => {

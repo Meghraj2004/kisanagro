@@ -28,7 +28,7 @@ export default function PhoneSelector({
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   const phoneNumbers: PhoneNumber[] = siteConfig.phoneNumbers || [
-    { name: 'Megharaj Dandgavhal', number: '9421612110', isPrimary: true }
+    { name: 'Jinedra Ajmera', number: '7249261176', isPrimary: true }
   ];
 
   // Close dropdown when clicking outside

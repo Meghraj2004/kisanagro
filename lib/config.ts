@@ -4,12 +4,12 @@ export const siteConfig = {
   description: 'KisanAgro is India\'s leading manufacturer of premium fruit foam nets, agricultural packaging solutions, and protective fruit wrapping materials. We supply high-quality EPE foam nets for mango, apple, guava protection during transport & export. Wholesale & bulk orders available nationwide.',
   url: process.env.NEXT_PUBLIC_SITE_URL || 'https://kisanagro.com',
   address: process.env.NEXT_PUBLIC_COMPANY_ADDRESS || 'Your Business Address, City, State, PIN',
-  phone: process.env.ADMIN_PHONE || '9421612110',
+  phone: process.env.ADMIN_PHONE || '7249261176',
   email: process.env.ADMIN_EMAIL || 'megharaj2004.ai@gmail.com',
   phoneNumbers: [
     {
-      name: 'Megharaj Dandgavhal',
-      number: '9421612110',
+      name: 'Jinendra Ajmera',
+      number: '7249261176',
       isPrimary: true
     },
     {
