@@ -12,6 +12,7 @@ import EnquiryModal from '@/components/EnquiryModal';
 import WhatsAppInquiryModal from '@/components/WhatsAppInquiryModal';
 import { generateProductSchema } from '@/lib/metadata';
 import { siteConfig } from '@/lib/config';
+import PhoneSelector from '@/components/PhoneSelector';
 
 export default function ProductDetailPage() {
   const params = useParams();
@@ -204,10 +205,10 @@ export default function ProductDetailPage() {
                   <FiMail className="mr-2" />
                   Email Inquiry
                 </button>
-                <a href={`tel:${siteConfig.phone}`} className="btn btn-outline">
+                <PhoneSelector buttonStyle="outline">
                   <FiPhone className="mr-2" />
                   Call Now
-                </a>
+                </PhoneSelector>
               </div>
             </div>
           </div>

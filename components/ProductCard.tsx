@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { FiPhone, FiMail, FiShoppingCart, FiPackage } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
 import WhatsAppInquiryModal from './WhatsAppInquiryModal';
+import SimplePhoneSelector from '@/components/SimplePhoneSelector';
 
 interface ProductCardProps {
   product: Product;
@@ -17,9 +18,7 @@ interface ProductCardProps {
 function ProductCardComponent({ product, onEnquiry, onAddToCart }: ProductCardProps) {
   const [showWhatsAppModal, setShowWhatsAppModal] = useState(false);
 
-  const handleCall = () => {
-    window.location.href = `tel:${process.env.NEXT_PUBLIC_ADMIN_PHONE || '9421612110'}`;
-  };
+
 
   return (
     <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-200 group">
@@ -115,13 +114,7 @@ function ProductCardComponent({ product, onEnquiry, onAddToCart }: ProductCardPr
           
           {/* Secondary Actions */}
           <div className="flex gap-2">
-            <button
-              onClick={handleCall}
-              className="flex-1 border border-green-500 text-green-600 hover:bg-green-50 font-medium py-2 px-3 rounded-md transition-colors duration-200 flex items-center justify-center gap-2 text-sm"
-            >
-              <FiPhone className="w-4 h-4" />
-              Call
-            </button>
+            <SimplePhoneSelector className="flex-1 border border-green-500 text-green-600 hover:bg-green-50 font-medium py-2 px-3 rounded-md transition-colors duration-200 flex items-center justify-center gap-2 text-sm" />
             <button
               onClick={() => setShowWhatsAppModal(true)}
               className="bg-green-500 hover:bg-green-600 text-white p-2.5 rounded-md transition-colors duration-200 flex items-center justify-center"

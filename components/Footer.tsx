@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { FiPhone, FiMail, FiMapPin, FiFacebook, FiTwitter, FiInstagram } from 'react-icons/fi';
 import { siteConfig, navigationLinks } from '@/lib/config';
+import CompactPhoneSelector from '@/components/CompactPhoneSelector';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -69,10 +70,7 @@ export default function Footer() {
                 <span className="text-sm">{siteConfig.address}</span>
               </li>
               <li className="flex items-center gap-2">
-                <FiPhone className="w-5 h-5" />
-                <a href={`tel:${siteConfig.phone}`} className="hover:text-primary-400 transition-colors">
-                  {siteConfig.phone}
-                </a>
+                <CompactPhoneSelector className="hover:text-primary-400 transition-colors" />
               </li>
               <li className="flex items-center gap-2">
                 <FiMail className="w-5 h-5" />

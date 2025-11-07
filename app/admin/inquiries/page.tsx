@@ -7,6 +7,7 @@ import { collection, getDocs, doc, updateDoc, deleteDoc, orderBy, query } from '
 import { db, auth } from '@/lib/firebase';
 import { useAdminAuth } from '@/lib/hooks/useAdminAuth';
 import { FiMail, FiPhone, FiMessageSquare, FiCheck, FiTrash2, FiLogOut, FiExternalLink } from 'react-icons/fi';
+import PhoneSelector from '@/components/PhoneSelector';
 
 // Force dynamic rendering to prevent static generation errors with Firebase
 export const dynamic = 'force-dynamic';

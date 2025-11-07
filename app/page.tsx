@@ -10,6 +10,7 @@ import { FiPhone, FiMail, FiPackage, FiShield, FiTruck, FiAward } from 'react-ic
 import ProductCard from '@/components/ProductCard';
 import { lazy, Suspense } from 'react';
 import LoadingSpinner from '@/components/LoadingSpinner';
+import PhoneSelector from '@/components/PhoneSelector';
 
 // Lazy load components for better performance
 const EnquiryModal = lazy(() => import('@/components/EnquiryModal'));
@@ -45,10 +46,10 @@ export default function HomePage() {
                 <Link href="/products" className="btn btn-primary">
                   View Products
                 </Link>
-                <a href={`tel:${siteConfig.phone}`} className="btn btn-outline">
+                <PhoneSelector buttonStyle="outline">
                   <FiPhone className="mr-2" />
                   Contact Us
-                </a>
+                </PhoneSelector>
               </div>
             </div>
             <div className="relative h-96 animate-slide-up animation-delay-200">
@@ -150,10 +151,10 @@ export default function HomePage() {
               <FiMail className="mr-2" />
               Send Inquiry
             </button>
-            <a href={`tel:${siteConfig.phone}`} className="btn border-2 border-white text-white hover:bg-white hover:text-primary-600">
+            <PhoneSelector buttonStyle="white">
               <FiPhone className="mr-2" />
               Call Now
-            </a>
+            </PhoneSelector>
           </div>
         </div>
       </section>

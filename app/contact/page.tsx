@@ -6,6 +6,7 @@ import { FaWhatsapp } from 'react-icons/fa';
 import { siteConfig } from '@/lib/config';
 import { validateEmail, validatePhone, sanitizeInput } from '@/lib/utils';
 import { generateLocalBusinessSchema } from '@/lib/metadata';
+import PhoneSelector from '@/components/PhoneSelector';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({

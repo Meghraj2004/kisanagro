@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { FiMenu, FiX, FiPhone } from 'react-icons/fi';
 import { navigationLinks, siteConfig } from '@/lib/config';
+import PhoneSelector from '@/components/PhoneSelector';
 import logo from '../public/logo.png';
 
 export default function Header() {
@@ -38,13 +39,10 @@ export default function Header() {
                 {link.name}
               </Link>
             ))}
-            <a
-              href={`tel:${siteConfig.phone}`}
-              className="btn btn-primary flex items-center gap-2"
-            >
+            <PhoneSelector customButtonClass="btn btn-primary flex items-center gap-2">
               <FiPhone className="w-4 h-4" />
               Call Now
-            </a>
+            </PhoneSelector>
           </div>
 
           {/* Mobile Menu Button */}
@@ -70,13 +68,12 @@ export default function Header() {
                 {link.name}
               </Link>
             ))}
-            <a
-              href={`tel:${siteConfig.phone}`}
-              className="btn btn-primary w-full mt-4 flex items-center justify-center gap-2"
-            >
-              <FiPhone className="w-4 h-4" />
-              Call Now
-            </a>
+            <div className="mt-4">
+              <PhoneSelector customButtonClass="btn btn-primary w-full flex items-center justify-center gap-2">
+                <FiPhone className="w-4 h-4" />
+                Call Now
+              </PhoneSelector>
+            </div>
           </div>
         )}
       </nav>

@@ -6,6 +6,18 @@ export const siteConfig = {
   address: process.env.NEXT_PUBLIC_COMPANY_ADDRESS || 'Your Business Address, City, State, PIN',
   phone: process.env.ADMIN_PHONE || '9421612110',
   email: process.env.ADMIN_EMAIL || 'megharaj2004.ai@gmail.com',
+  phoneNumbers: [
+    {
+      name: 'Megharaj Dandgavhal',
+      number: '9421612110',
+      isPrimary: true
+    },
+    {
+      name: 'Sales Manager',
+      number: '1234567890',
+      isPrimary: false
+    }
+  ],
   keywords: [
     'kesanagro',
     'kisan agro',
