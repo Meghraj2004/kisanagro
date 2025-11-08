@@ -133,7 +133,7 @@ export default function ContactPage() {
                 <div>
                   <h3 className="font-semibold text-gray-900 mb-1">WhatsApp</h3>
                   <a
-                    href={`https://wa.me/${siteConfig.phone}?text=Hello, I would like to inquire about your products`}
+                    href={`https://wa.me/91${siteConfig.phone}?text=${encodeURIComponent('🌟 Hello KisanAgro! 🌟\n\nI am interested in your premium fruit foam nets and packaging solutions.\n\n📦 Please share:\n• Product catalog with prices\n• Bulk order discounts\n• Delivery options\n\nThank you! 🙏')}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-green-600 hover:underline"
@@ -277,6 +277,8 @@ export default function ContactPage() {
           />
         </div>
       </section>
+
+
     </>
   );
 }

@@ -36,8 +36,13 @@ export const sanitizeInput = (input: string): string => {
 };
 
 export const generateWhatsAppLink = (phone: string, message: string): string => {
-  const encodedMessage = encodeURIComponent(message);
-  return `https://wa.me/${phone}?text=${encodedMessage}`;
+  // Add professional footer to message
+  const professionalMessage = `${message}\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━\n🏭 *KISANAGRO* - Premium Fruit Protection\n🌐 www.kisanagro.com\n⭐ Quality • Reliability • Trust`;
+  
+  const encodedMessage = encodeURIComponent(professionalMessage);
+  // Format phone number for WhatsApp (add country code if not present)
+  const formattedPhone = phone.startsWith('91') ? phone : `91${phone}`;
+  return `https://wa.me/${formattedPhone}?text=${encodedMessage}`;
 };
 
 export const getProductImageUrl = (productId: string, imageName: string): string => {

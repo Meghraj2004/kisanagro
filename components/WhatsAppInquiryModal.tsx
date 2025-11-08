@@ -132,41 +132,68 @@ export default function WhatsAppInquiryModal({ product, isOpen, onClose }: Whats
       return;
     }
 
-    // Create beautiful WhatsApp message with emojis
-    let message = `
-🌟 *NEW PRODUCT INQUIRY* 🌟
-━━━━━━━━━━━━━━━━━━━━
+    // Professional message format for WhatsApp Business
+    let message = `🌟 *PRODUCT INQUIRY - KISANAGRO* 🌟
 
-👤 *Customer Details:*
-Name: ${formData.name}
-📱 Phone: ${formData.phone}
+🙋‍♂️ *Customer Information:*
+👤 Name: *${formData.name}*
+📱 Phone: *${formData.phone}*
 
-🛍️ *Product Requirements:*
-`;
+📦 *Products Required:*`;
 
     selectedProducts.forEach((selection, index) => {
       message += `
-📦 *Product ${index + 1}:*
-• Product: ${selection.productTitle}
-• Category: ${selection.category}
-• Fruit Type: ${selection.fruitName}
-• Size: ${selection.size}
-• Quantity: ${selection.quantity}
-${selection.price ? `• Price: ₹${selection.price}` : ''}
-`;
+
+${index + 1}️⃣ *${selection.productTitle}*
+    📏 Size: ${selection.size}
+    🔢 Quantity: ${selection.quantity}`;
+      if (selection.price) {
+        message += `
+    💰 Price: ₹${selection.price}`;
+      }
     });
 
-    message += `
-${formData.additionalNotes ? `📝 *Additional Notes:*\n${formData.additionalNotes}\n` : ''}
-━━━━━━━━━━━━━━━━━━━━
-⏰ Inquiry Time: ${new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })}
+    if (formData.additionalNotes) {
+      message += `
 
-✅ *Please contact me with pricing and availability.*`;
+📝 *Special Requirements:*
+${formData.additionalNotes}`;
+    }
+
+    message += `
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ *Please provide:*
+💰 Best pricing for bulk orders
+📦 Product availability & delivery time
+🚛 Shipping charges to my location
+
+⏰ *Inquiry Date:* ${new Date().toLocaleDateString('en-IN')}
+
+🔥 *Looking forward to your best quotation!*
+Thank you! 🙏`;
 
     const adminPhone = process.env.NEXT_PUBLIC_ADMIN_PHONE || '7249261176';
-    const whatsappUrl = `https://wa.me/${adminPhone}?text=${encodeURIComponent(message.trim())}`;
     
-    window.open(whatsappUrl, '_blank');
+    // For WhatsApp Business compatibility, try different formats
+    const formattedPhone = adminPhone.startsWith('91') ? adminPhone : `91${adminPhone}`;
+    
+    try {
+      const encodedMessage = encodeURIComponent(message.trim());
+      let whatsappUrl = `https://wa.me/${formattedPhone}?text=${encodedMessage}`;
+      
+      // If URL is too long, use shorter message
+      if (whatsappUrl.length > 2000) {
+        const shortMessage = `Hi! I'm ${formData.name} (${formData.phone}). Interested in ${selectedProducts.length} product(s). Please contact me.`;
+        whatsappUrl = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(shortMessage)}`;
+      }
+      
+      window.open(whatsappUrl, '_blank');
+    } catch (error) {
+      // Fallback: Open WhatsApp without message
+      window.open(`https://wa.me/${formattedPhone}`, '_blank');
+    }
     onClose();
     
     // Reset form

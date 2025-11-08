@@ -5,7 +5,7 @@ export const siteConfig = {
   url: process.env.NEXT_PUBLIC_SITE_URL || 'https://kisanagro.com',
   address: process.env.NEXT_PUBLIC_COMPANY_ADDRESS || 'Your Business Address, City, State, PIN',
   phone: process.env.ADMIN_PHONE || '7249261176',
-  email: process.env.ADMIN_EMAIL || 'megharaj2004.ai@gmail.com',
+  email: process.env.ADMIN_EMAIL || 'foamnetkisanagro@gmail.com',
   phoneNumbers: [
     {
       name: 'Jinendra Ajmera',
@@ -13,8 +13,8 @@ export const siteConfig = {
       isPrimary: true
     },
     {
-      name: 'Sales Manager',
-      number: '1234567890',
+      name: 'Megharaj Dandgavhal',
+      number: '9421612110',
       isPrimary: false
     }
   ],

@@ -1,3 +1,4 @@
+
 import { FiAward, FiUsers, FiTruck, FiShield } from 'react-icons/fi';
 import { generateMetadata } from '@/lib/metadata';
 
@@ -61,9 +62,9 @@ export default function AboutPage() {
         <div className="container">
           <div className="grid md:grid-cols-4 gap-8 text-center">
             {[
-              { number: '10+', label: 'Years Experience' },
-              { number: '500+', label: 'Happy Clients' },
-              { number: '50K+', label: 'Products Delivered' },
+              { number: '1+', label: 'Years Experience' },
+              { number: '250+', label: 'Happy Clients' },
+              { number: '10K+', label: 'Products Delivered' },
               { number: '100%', label: 'Quality Guarantee' },
             ].map((stat, index) => (
               <div key={index}>
